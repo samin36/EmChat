@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "588828839625",
+    "firebase_url": "https://fir-database-e1f73.firebaseio.com",
+    "project_id": "fir-database-e1f73",
+    "storage_bucket": "fir-database-e1f73.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:588828839625:android:c891e9561c352edd",
+        "android_client_info": {
+          "package_name": "sa.home.projects.emchat"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "588828839625-ai0l0tn4i7dv0pe0phe9re987cpqu4p0.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "sa.home.projects.emchat",
+            "certificate_hash": "e7c91dfd3be0cf06c34cd05c8bad2c234db383d5"
+          }
+        },
+        {
+          "client_id": "588828839625-saehop7vo3qfdlt3eg3sk8m2t0am6qh3.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCCUqPKpA0MXYqw5-KdfbbeOkfK6ayYhJk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "588828839625-saehop7vo3qfdlt3eg3sk8m2t0am6qh3.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

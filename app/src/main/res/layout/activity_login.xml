@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/background"
+    tools:context=".Activities.LoginActivity">
+
+    <include
+        android:id="@+id/login_toolbar"
+        layout="@layout/app_bar_layout" />
+
+    <TextView
+        android:id="@+id/login_welcome_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="50dp"
+        android:layout_marginTop="80dp"
+        android:layout_marginEnd="31dp"
+        android:layout_marginBottom="67dp"
+        android:fontFamily="sans-serif-black"
+        android:text="@string/login_welcome"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textColor="@color/white"
+        android:textSize="68sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/login_email_id"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/login_toolbar" />
+
+    <android.support.design.widget.TextInputLayout
+        android:id="@+id/login_email_id"
+        android:layout_width="395dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="67dp"
+        android:layout_marginEnd="8dp"
+        android:hint="@string/email"
+        android:textColorHint="@color/dark_pink"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/login_welcome_text">
+
+        <android.support.design.widget.TextInputEditText
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/input_text_height"
+            android:layout_marginStart="5dp"
+            android:layout_marginEnd="5dp"
+            android:background="@drawable/rounded_rect_button"
+            android:backgroundTint="@color/black"
+            android:fontFamily="sans-serif-medium"
+            android:inputType="textEmailAddress"
+            android:paddingStart="20dp"
+            android:paddingEnd="20dp"
+            android:shadowColor="@color/colorAccent"
+            android:textSize="18sp"
+            android:textColor="@color/dark_pink"/>
+    </android.support.design.widget.TextInputLayout>
+
+    <android.support.design.widget.TextInputLayout
+        android:id="@+id/login_password"
+        android:layout_width="395dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="32dp"
+        android:layout_marginEnd="8dp"
+        android:textColorHint="@color/dark_pink"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/login_email_id">
+
+        <android.support.design.widget.TextInputEditText
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/input_text_height"
+            android:layout_marginStart="5dp"
+            android:layout_marginEnd="5dp"
+            android:background="@drawable/rounded_rect_button"
+            android:backgroundTint="@color/black"
+            android:fontFamily="sans-serif-medium"
+            android:hint="@string/password"
+            android:inputType="textPassword"
+            android:paddingStart="20dp"
+            android:paddingEnd="20dp"
+            android:shadowColor="@color/colorAccent"
+            android:textSize="18sp"
+            android:textColor="@color/dark_pink" />
+    </android.support.design.widget.TextInputLayout>
+
+    <Button
+        android:id="@+id/login_button"
+        android:layout_width="@dimen/button_width"
+        android:layout_height="@dimen/button_height"
+        android:layout_marginStart="116dp"
+        android:layout_marginTop="28dp"
+        android:layout_marginEnd="117dp"
+        android:layout_marginBottom="7dp"
+        android:background="@drawable/rounded_rect_button"
+        android:backgroundTint="@color/colorAccent"
+        android:fontFamily="sans-serif-black"
+        android:hapticFeedbackEnabled="false"
+        android:text="@string/auth_login_button"
+        android:textColor="@color/dark_blue"
+        android:textSize="20sp"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        app:layout_constraintBottom_toTopOf="@+id/login_reset_password"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/login_password" />
+
+    <TextView
+        android:id="@+id/login_reset_password"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="156dp"
+        android:layout_marginEnd="156dp"
+        android:layout_marginBottom="44dp"
+        android:fontFamily="sans-serif-medium"
+        android:text="@string/forgot_password"
+        android:textColor="@color/very_light_green"
+        android:textSize="12sp"
+        app:layout_constraintBottom_toTopOf="@+id/login_progress_bar"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <ProgressBar
+        android:id="@+id/login_progress_bar"
+        style="?android:attr/progressBarStyle"
+        android:layout_width="56dp"
+        android:layout_height="60dp"
+        android:layout_marginStart="177dp"
+        android:layout_marginEnd="178dp"
+        android:layout_marginBottom="16dp"
+        android:backgroundTint="#E91E63"
+        android:foregroundTint="#E91E63"
+        android:indeterminateTint="#E91E63"
+        android:progressBackgroundTint="#E91E63"
+        android:progressTint="#E91E63"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+</android.support.constraint.ConstraintLayout>

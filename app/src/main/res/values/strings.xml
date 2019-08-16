@@ -1,0 +1,29 @@
+<resources>
+    <string name="app_name">EmChat</string>
+    <string name="welcome_text">Welcome to EmChat!</string>
+    <string name="register">Register</string>
+    <string name="create_a_new_account">Let\'s Get You Set Up!</string>
+    <string name="username">Username</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="register_action">Register</string>
+    <string name="logout">Logout</string>
+    <string name="register_toolbar_title">Create Account</string>
+    <string name="auth_login_button">Login</string>
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="login_welcome">Welcome Back!</string>
+    <string name="forgot_password"><a href="https://www.google.com">Forgot Password?</a></string>
+    <string name="successful_registration">Registration Successful</string>
+    <string name="successful_login">Login Successful!</string>
+    <string name="no_loggedin_user">No Logged in user</string>
+    <string name="requests">Requests</string>
+    <string name="chats">Chats</string>
+    <string name="friends">Friends</string>
+    <string name="search">Search</string>
+    <string name="account_settings">Account Settings</string>
+    <string name="change_status">Change Status</string>
+    <string name="change_image">Change Image</string>
+    <string name="tag_line">Chat without compromising productivity</string>
+    <string name="default_username">Default Username</string>
+    <string name="default_status">Yooo, EmChat is awesome!</string>
+</resources>

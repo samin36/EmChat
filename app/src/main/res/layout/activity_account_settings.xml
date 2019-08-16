@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/background"
+    tools:context=".Activities.AccountSettings">
+
+    <include
+        android:id="@+id/account_settings_toolbar"
+        layout="@layout/app_bar_layout" />
+
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/account_settings_image"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        android:layout_marginStart="105dp"
+        android:layout_marginTop="42dp"
+        android:layout_marginEnd="106dp"
+        android:src="@drawable/vegeta"
+        app:civ_border_color="@color/colorAccent"
+        app:civ_border_width="2dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/account_settings_toolbar" />
+
+    <TextView
+        android:id="@+id/account_settings_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="143dp"
+        android:layout_marginTop="28dp"
+        android:layout_marginEnd="143dp"
+        android:fontFamily="sans-serif-black"
+        android:text="@string/default_username"
+        android:textColor="@color/white"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/account_settings_image" />
+
+    <TextView
+        android:id="@+id/account_settings_status"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="95dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="87dp"
+        android:paddingStart="20dp"
+        android:paddingEnd="20dp"
+        android:ellipsize="marquee"
+        android:marqueeRepeatLimit="marquee_forever"
+        android:scrollHorizontally="true"
+        android:fontFamily="sans-serif-medium"
+        android:singleLine="true"
+        android:text="@string/default_status"
+        android:textColor="@color/teal_green"
+        android:textSize="18sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/account_settings_name" />
+
+    <Button
+        android:id="@+id/account_change_image"
+        android:layout_width="@dimen/button_width_large"
+        android:layout_height="@dimen/button_height"
+        android:layout_marginStart="80dp"
+        android:layout_marginTop="96dp"
+        android:layout_marginEnd="81dp"
+        android:background="@drawable/rounded_rect_button_border"
+        android:fontFamily="sans-serif-black"
+        android:text="@string/change_image"
+        android:textColor="@color/white"
+        android:textSize="20sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/account_settings_status" />
+
+    <Button
+        android:id="@+id/account_change_status"
+        android:layout_width="@dimen/button_width_large"
+        android:layout_height="@dimen/button_height"
+        android:layout_marginStart="80dp"
+        android:layout_marginTop="28dp"
+        android:layout_marginEnd="81dp"
+        android:layout_marginBottom="118dp"
+        android:background="@drawable/rounded_rect_button"
+        android:backgroundTint="@color/colorAccent"
+        android:fontFamily="sans-serif-black"
+        android:text="@string/change_status"
+        android:textColor="@color/dark_blue"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/account_change_image" />
+
+</android.support.constraint.ConstraintLayout>
