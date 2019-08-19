@@ -69,6 +69,9 @@ public class MainActivity extends AppCompatActivity {
             case R.id.main_menu_account_settings:
                 sendToAccountSettingsActivity();
                 break;
+            case R.id.main_menu_all_users:
+                sendToAllUsersActivity();
+                break;
             default:
                 break;
         }
@@ -95,6 +98,11 @@ public class MainActivity extends AppCompatActivity {
 
     private void sendToAccountSettingsActivity() {
         Intent intent = new Intent(MainActivity.this, AccountSettings.class);
+        startActivity(intent);
+    }
+
+    private void sendToAllUsersActivity() {
+        Intent intent = new Intent(MainActivity.this, AllUsers.class);
         startActivity(intent);
     }
 

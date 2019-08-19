@@ -4,4 +4,6 @@
     <dimen name="button_width">178dp</dimen>
     <dimen name="button_height">49dp</dimen>
     <dimen name="button_width_large">250dp</dimen>
+    <dimen name="status_change_dialog_height">220dp</dimen>
+    <dimen name="avatar_image_small">70dp</dimen>
 </resources>

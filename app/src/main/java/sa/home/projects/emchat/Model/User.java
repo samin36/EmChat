@@ -1,17 +1,24 @@
 package sa.home.projects.emchat.Model;
 
+import com.google.firebase.database.Exclude;
+
+import java.util.HashMap;
+import java.util.Map;
+
 public class User {
 
     private String name;
     private String image;
+    private String thumbImage;
     private String status;
 
     public User() {
     }
 
-    public User(String name, String image, String status) {
+    public User(String name, String image, String thumbImage, String status) {
         this.name = name;
         this.image = image;
+        this.thumbImage = thumbImage;
         this.status = status;
     }
 
@@ -31,6 +38,10 @@ public class User {
         this.image = image;
     }
 
+    public String getThumbImage() { return thumbImage; }
+
+    public void setThumbImage(String thumbImage) { this.thumbImage = thumbImage;};
+
     public String getStatus() {
         return status;
     }
@@ -41,8 +52,9 @@ public class User {
 
     @Override
     public String toString() {
-        return String.format("Name: %s\n Image: %s\n Status: %s", this.name, this.image,
-                             this.status);
+        return String
+                .format("Name: %s\n Status: %s", this.name, this.status);
     }
+
 
 }

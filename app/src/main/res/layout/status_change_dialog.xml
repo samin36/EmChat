@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    >
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/status_change_dialog_height"
+        android:src="@drawable/background"
+        android:scaleType="fitXY"
+        />
+
+    <android.support.design.widget.TextInputEditText
+        android:id="@+id/status_change_edit_text"
+        style="@style/edit_text_style"
+        android:layout_marginTop="20dp"
+        android:hint="@string/change_status" />
+
+    <Button
+        android:id="@+id/status_change_confirm"
+        style="@style/rounded_button"
+        android:layout_below="@+id/status_change_edit_text"
+        android:layout_marginTop="20dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
+        android:layout_centerHorizontal="true"
+        android:text="@string/change_status"
+        android:textSize="18sp" />
+
+    <Button
+        android:id="@+id/status_change_cancel"
+        style="@style/rounded_button_with_border"
+        android:layout_below="@+id/status_change_confirm"
+        android:layout_marginTop="20dp"
+        android:layout_marginStart="20dp"
+        android:layout_centerHorizontal="true"
+        android:text="@string/cancel"
+        />
+
+</RelativeLayout>

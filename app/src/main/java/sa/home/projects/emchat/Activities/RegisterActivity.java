@@ -1,32 +1,33 @@
 package sa.home.projects.emchat.Activities;
 
+import android.app.AlertDialog;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.net.Uri;
+import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.constraint.ConstraintLayout;
-import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
-import android.util.Log;
-import android.view.View;
 import android.widget.Button;
-import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 import com.squareup.picasso.Picasso;
 import com.theartofdev.edmodo.cropper.CropImage;
-import com.theartofdev.edmodo.cropper.CropImageActivity;
-import com.theartofdev.edmodo.cropper.CropImageView;
+
+import java.io.ByteArrayOutputStream;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import es.dmoral.toasty.Toasty;
@@ -34,6 +35,7 @@ import sa.home.projects.emchat.Model.User;
 import sa.home.projects.emchat.R;
 import sa.home.projects.emchat.Utils.InputChecker;
 import sa.home.projects.emchat.Utils.UiUtils;
+
 
 
 public class RegisterActivity extends AppCompatActivity {
@@ -48,13 +50,13 @@ public class RegisterActivity extends AppCompatActivity {
 
     private CircleImageView avatar;
 
-    private ProgressBar progressBar;
+    private AlertDialog progressDialog;
 
     private FirebaseAuth auth;
-    private DatabaseReference databaseReference;
 
     private Uri avatarUri;
 
+    private Bitmap avatarThumbImage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,15 +64,12 @@ public class RegisterActivity extends AppCompatActivity {
         setContentView(R.layout.activity_register);
         auth = FirebaseAuth.getInstance();
 
-//        databaseReference = FirebaseDatabase.getInstance().getReference().child("Users");
-
 
         username = findViewById(R.id.register_username);
         email_Id = findViewById(R.id.register_email_id);
         password = findViewById(R.id.register_password);
 
-        progressBar = findViewById(R.id.register_progress_bar);
-        progressBar.setVisibility(View.INVISIBLE);
+        progressDialog = UiUtils.createProgressDialog(this);
 
         registerButton = findViewById(R.id.register_button);
         registerButton.setOnClickListener(view -> {
@@ -78,9 +77,8 @@ public class RegisterActivity extends AppCompatActivity {
             String usernameStr = InputChecker.parseString(username);
             String emailStr = InputChecker.parseString(email_Id);
             String passwordStr = InputChecker.parseString(password);
-            if (!(TextUtils.isEmpty(usernameStr) || TextUtils.isEmpty(emailStr) || TextUtils
-                    .isEmpty(passwordStr))) {
-                progressBar.setVisibility(View.VISIBLE);
+            if (!(TextUtils.isEmpty(usernameStr) || TextUtils.isEmpty(emailStr) || TextUtils.isEmpty(passwordStr))) {
+                progressDialog.show();
                 registerUser(usernameStr, emailStr, passwordStr);
             }
         });
@@ -103,7 +101,8 @@ public class RegisterActivity extends AppCompatActivity {
             CropImage.ActivityResult result = CropImage.getActivityResult(data);
             if (resultCode == RESULT_OK) {
                 avatarUri = result.getUri();
-                Picasso.get().load(avatarUri).into(avatar);
+                avatarThumbImage = UiUtils.createAvatarThumbImage(this, avatarUri);
+                Picasso.get().load(avatarUri).placeholder(R.drawable.default_profile_pic).into(avatar);
             } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
                 Toasty.error(this, result.getError().getMessage(), Toasty.LENGTH_LONG).show();
             }
@@ -112,50 +111,102 @@ public class RegisterActivity extends AppCompatActivity {
 
     private void registerUser(String username, String email, String password) {
         auth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(this, task -> {
-            progressBar.setVisibility(View.INVISIBLE);
             if (task.isSuccessful()) {
-                Toasty.success(this, getResources().getString(R.string.successful_registration),
-                               Toast.LENGTH_LONG).show();
-                addImageToStorage(username);
+                Toasty.success(this, getResources().getString(R.string.successful_registration), Toast.LENGTH_LONG)
+                        .show();
+                addImagesToStorage(username);
+                progressDialog.dismiss();
                 sendToMainActivity();
             } else {
-                Toasty.error(this, task.getException().getMessage(), Toast.LENGTH_LONG).show();
+                Toasty.error(this, "Error authenticating user: " + task.getException().getMessage(), Toast.LENGTH_LONG)
+                        .show();
+                progressDialog.dismiss();
             }
         });
     }
 
-    private void addImageToStorage(String username) {
+    private void addImagesToStorage(String username) {
         if (avatarUri != null) {
             String currentUid = auth.getCurrentUser().getUid();
-            String imageFileName = String.format("images/%s.jpg", currentUid);
-            StorageReference storageRef =
-                    FirebaseStorage.getInstance().getReference().child(imageFileName);
-            storageRef.putFile(avatarUri).addOnSuccessListener(taskSnapshot -> {
-                storageRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-                    @Override
-                    public void onSuccess(Uri uri) {
-                        addUserToDatabase(username, uri.toString());
+
+
+            String imageFileName = String.format("avatar_images/%s.jpg", currentUid);
+            StorageReference imageStorageRef = FirebaseStorage.getInstance().getReference().child(imageFileName);
+
+
+            String thumbImageFileName = String.format("avatar_images/thumb_images/%s.jpg", currentUid);
+            StorageReference thumbStorageRef = FirebaseStorage.getInstance().getReference().child(thumbImageFileName);
+
+
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            avatarThumbImage.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+            byte[] thumbImageData = baos.toByteArray();
+
+
+            imageStorageRef.putFile(avatarUri).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
+                @Override
+                public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
+                    if (task.isSuccessful()) {
+
+                        imageStorageRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                            @Override
+                            public void onSuccess(Uri avatarImageUri) {
+
+                                //Now uploading the thumbnail image
+                                UploadTask thumbUploadTask = thumbStorageRef.putBytes(thumbImageData);
+                                thumbUploadTask
+                                        .addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
+                                            @Override
+                                            public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
+                                                if (task.isSuccessful()) {
+
+                                                    thumbStorageRef.getDownloadUrl()
+                                                            .addOnSuccessListener(new OnSuccessListener<Uri>() {
+                                                                @Override
+                                                                public void onSuccess(Uri thumbImageUri) {
+                                                                    addUserToDatabase(username,
+                                                                                      avatarImageUri.toString(),
+                                                                                      thumbImageUri.toString());
+                                                                }
+                                                            });
+
+                                                } else {
+                                                    Toasty.error(RegisterActivity.this,
+                                                                 "Error uploading " + "thumbnail " + "image",
+                                                                 Toasty.LENGTH_LONG).show();
+                                                    addUserToDatabase(username, avatarImageUri.toString(), "");
+                                                }
+                                            }
+                                        });
+                            }
+                        });
+                    } else {
+                        Toasty.error(RegisterActivity.this, "Error uploading images to storage", Toasty.LENGTH_LONG)
+                                .show();
+                        addUserToDatabase(username, "", "");
                     }
-                });
+                }
             });
         } else {
-            addUserToDatabase(username, "");
+            addUserToDatabase(username, "", "");
         }
     }
 
-    private void addUserToDatabase(String username, String imageLink) {
+    private void addUserToDatabase(String username, String avatarImageLink, String thumbImageLink) {
         FirebaseUser currentUser = auth.getCurrentUser();
         String currentUid = currentUser.getUid();
         DatabaseReference databaseReference =
                 FirebaseDatabase.getInstance().getReference().child("Users").child(currentUid);
 
-        User userToAdd = new User(username, imageLink, "Hey, EmChat is great!");
+        User userToAdd =
+                new User(username, avatarImageLink, thumbImageLink, getResources().getString(R.string.default_status));
+
         databaseReference.setValue(userToAdd).addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
-                Toasty.success(this, "User added to database successfully", Toast.LENGTH_LONG)
-                        .show();
+                Toasty.success(this, "User added to database successfully", Toast.LENGTH_LONG).show();
             } else {
-                Toasty.error(this, task.getException().getMessage(), Toast.LENGTH_LONG).show();
+                Toasty.error(this, "Error adding user to database: " + task.getException().getMessage(),
+                             Toasty.LENGTH_LONG).show();
             }
         });
     }

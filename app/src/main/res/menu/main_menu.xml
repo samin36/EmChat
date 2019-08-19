@@ -18,5 +18,9 @@
         android:title="@string/account_settings"
         app:showAsAction="never" />
 
+    <item android:id="@+id/main_menu_all_users"
+        android:title="@string/all_users"
+        app:showAsAction="never" />
+
 
 </menu>

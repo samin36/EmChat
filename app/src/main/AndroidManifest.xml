@@ -3,8 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="sa.home.projects.emchat">
 
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <application
         android:allowBackup="true"
@@ -13,8 +13,11 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".Activities.AccountSettings"
-                  android:parentActivityName=".Activities.MainActivity"/>
+        <activity android:name=".Activities.AllUsers"
+            android:parentActivityName=".Activities.MainActivity"></activity>
+        <activity
+            android:name=".Activities.AccountSettings"
+            android:parentActivityName=".Activities.MainActivity" />
         <activity
             android:name=".Activities.LoginActivity"
             android:parentActivityName=".Activities.AuthActivity" />
@@ -22,8 +25,9 @@
             android:name=".Activities.RegisterActivity"
             android:parentActivityName=".Activities.AuthActivity" />
         <activity android:name=".Activities.AuthActivity" />
-        <activity android:name="com.theartofdev.edmodo.cropper.CropImageActivity"
-            android:theme="@style/Base.Theme.AppCompat"/>
+        <activity
+            android:name="com.theartofdev.edmodo.cropper.CropImageActivity"
+            android:theme="@style/Base.Theme.AppCompat" />
         <activity android:name=".Activities.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

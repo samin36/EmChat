@@ -41,7 +41,7 @@
         android:layout_marginTop="8dp"
         android:layout_marginEnd="116dp"
         android:layout_marginBottom="30dp"
-        android:src="@drawable/vegeta"
+        android:src="@drawable/default_profile_pic"
         app:layout_constraintBottom_toTopOf="@+id/register_username"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -64,21 +64,9 @@
         app:layout_constraintTop_toBottomOf="@+id/register_avatar">
 
         <android.support.design.widget.TextInputEditText
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/input_text_height"
-            android:layout_marginStart="5dp"
-            android:layout_marginEnd="5dp"
-            android:background="@drawable/rounded_rect_button"
-            android:backgroundTint="@color/black"
-            android:fontFamily="sans-serif-medium"
+            style="@style/edit_text_style"
             android:hint="@string/username"
-            android:paddingStart="20dp"
-            android:paddingEnd="20dp"
-            android:shadowColor="@color/colorAccent"
-            android:singleLine="true"
-            android:textColor="@color/dark_pink"
-            android:textColorHint="#5A1414"
-            android:textSize="18sp" />
+            android:singleLine="true" />
     </android.support.design.widget.TextInputLayout>
 
     <android.support.design.widget.TextInputLayout
@@ -96,22 +84,11 @@
         app:layout_constraintTop_toBottomOf="@+id/register_username">
 
         <android.support.design.widget.TextInputEditText
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/input_text_height"
-            android:layout_marginStart="5dp"
-            android:layout_marginEnd="5dp"
-            android:background="@drawable/rounded_rect_button"
-            android:backgroundTint="@color/black"
-            android:fontFamily="sans-serif-medium"
+            style="@style/edit_text_style"
             android:hint="@string/email"
             android:inputType="textEmailAddress"
-            android:paddingStart="20dp"
-            android:paddingEnd="20dp"
-            android:shadowColor="@color/colorAccent"
             android:singleLine="true"
-            android:textColor="@color/dark_pink"
-            android:textColorHint="@color/dark_pink"
-            android:textSize="18sp" />
+            />
     </android.support.design.widget.TextInputLayout>
 
     <android.support.design.widget.TextInputLayout
@@ -130,61 +107,26 @@
 
         <android.support.design.widget.TextInputEditText
             android:id="@+id/textInputEditText"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/input_text_height"
-            android:layout_marginStart="5dp"
-            android:layout_marginEnd="5dp"
-            android:background="@drawable/rounded_rect_button"
-            android:backgroundTint="@color/black"
-            android:fontFamily="sans-serif-medium"
+            style="@style/edit_text_style"
             android:hint="@string/password"
             android:inputType="textPassword"
-            android:paddingStart="20dp"
-            android:paddingEnd="20dp"
-            android:shadowColor="@color/colorAccent"
             android:singleLine="true"
-            android:textColor="@color/dark_pink"
-            android:textColorHint="@color/dark_pink"
-            android:textSize="18sp" />
+            />
     </android.support.design.widget.TextInputLayout>
 
     <Button
         android:id="@+id/register_button"
-        android:layout_width="@dimen/button_width"
-        android:layout_height="@dimen/button_height"
+        style="@style/rounded_button_with_border"
         android:layout_marginStart="8dp"
         android:layout_marginTop="13dp"
         android:layout_marginEnd="116dp"
         android:layout_marginBottom="40dp"
-        android:background="@drawable/rounded_rect_button_border"
-        android:fontFamily="sans-serif-black"
-
         android:text="@string/register_action"
         android:textAllCaps="true"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:textColor="@android:color/white"
-        android:textSize="20sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/register_progress_bar"
         app:layout_constraintTop_toBottomOf="@+id/register_password" />
 
-    <ProgressBar
-        android:id="@+id/register_progress_bar"
-        style="?android:attr/progressBarStyle"
-        android:layout_width="59dp"
-        android:layout_height="57dp"
-        android:layout_marginStart="30dp"
-        android:layout_marginTop="20dp"
-        android:layout_marginEnd="28dp"
-        android:layout_marginBottom="32dp"
-        android:backgroundTint="#9C27B0"
-        android:foregroundTint="#9C27B0"
-        android:indeterminateTint="#9C27B0"
-        android:progressTint="#9C27B0"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/register_button"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/register_password" />
+
 
 </android.support.constraint.ConstraintLayout>

@@ -25,5 +25,10 @@
     <string name="change_image">Change Image</string>
     <string name="tag_line">Chat without compromising productivity</string>
     <string name="default_username">Default Username</string>
-    <string name="default_status">Yooo, EmChat is awesome!</string>
+    <string name="default_status">Hey, I am using EmChat!</string>
+    <string name="change_status_title">What\'s the new status?</string>
+    <string name="change_status_message">New Status</string>
+    <string name="progress_message">Please wait...</string>
+    <string name="cancel">cancel</string>
+    <string name="all_users">All Users</string>
 </resources>
