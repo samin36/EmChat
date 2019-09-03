@@ -1,25 +1,31 @@
 package sa.home.projects.emchat.Model;
 
-import com.google.firebase.database.Exclude;
-
-import java.util.HashMap;
-import java.util.Map;
-
 public class User {
 
     private String name;
     private String image;
     private String thumbImage;
     private String status;
+    private Boolean saveFingerprint;
 
     public User() {
     }
 
-    public User(String name, String image, String thumbImage, String status) {
+    public User(String name, String image, String thumbImage, String status,
+                Boolean saveFingerprint) {
         this.name = name;
         this.image = image;
         this.thumbImage = thumbImage;
         this.status = status;
+        this.saveFingerprint = saveFingerprint;
+    }
+
+    public Boolean isSaveFingerprint() {
+        return saveFingerprint;
+    }
+
+    public void setSaveFingerprint(Boolean saveFingerprint) {
+        this.saveFingerprint = saveFingerprint;
     }
 
     public String getName() {

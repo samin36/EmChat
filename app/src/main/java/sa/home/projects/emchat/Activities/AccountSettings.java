@@ -85,6 +85,8 @@ public class AccountSettings extends AppCompatActivity {
         avatar = findViewById(R.id.account_settings_image);
         changeAvatar = findViewById(R.id.account_change_image);
         changeStatus = findViewById(R.id.account_change_status);
+        UiUtils.addButtonEffect(changeAvatar);
+        UiUtils.addButtonEffect(changeStatus);
 
         name = findViewById(R.id.account_settings_name);
         status = findViewById(R.id.account_settings_status);
@@ -293,6 +295,8 @@ public class AccountSettings extends AppCompatActivity {
         EditText newStatus = dialogView.findViewById(R.id.status_change_edit_text);
         Button confirmChange = dialogView.findViewById(R.id.status_change_confirm);
         Button cancelChange = dialogView.findViewById(R.id.status_change_cancel);
+        UiUtils.addButtonEffect(confirmChange);
+        UiUtils.addButtonEffect(cancelChange);
 
         newStatus.setText(status.getText());
         newStatus.setSelection(newStatus.getText().length());

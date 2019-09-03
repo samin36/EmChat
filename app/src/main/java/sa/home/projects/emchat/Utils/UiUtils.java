@@ -1,18 +1,24 @@
 package sa.home.projects.emchat.Utils;
 
+import android.Manifest;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.PorterDuff;
 import android.net.Uri;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 
+import com.gun0912.tedpermission.PermissionListener;
+import com.gun0912.tedpermission.TedPermission;
 import com.theartofdev.edmodo.cropper.CropImage;
 import com.theartofdev.edmodo.cropper.CropImageView;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 
 import dmax.dialog.SpotsDialog;
 import es.dmoral.toasty.Toasty;
@@ -54,6 +60,53 @@ public class UiUtils {
             avatarThumbImage = null;
         }
         return avatarThumbImage;
+    }
+
+    public static void addButtonEffect(View button) {
+        button.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                switch (event.getAction()) {
+                    case MotionEvent.ACTION_DOWN: {
+                        v.getBackground().setColorFilter(0xe0f47521, PorterDuff.Mode.SRC_ATOP);
+                        v.invalidate();
+                        break;
+                    }
+                    case MotionEvent.ACTION_UP: {
+                        v.getBackground().clearColorFilter();
+                        v.invalidate();
+                        break;
+                    }
+                }
+                return false;
+            }
+        });
+    }
+
+    public static void requestPermissions(Activity activity, String[] permissions, String denyMessage) {
+        boolean result = false;
+        PermissionListener listenPermission = new PermissionListener() {
+
+            @Override
+            public void onPermissionGranted() {
+
+            }
+
+            @Override
+            public void onPermissionDenied(List<String> deniedPermissions) {
+                Toasty.warning(activity, "Permission Denied", Toasty.LENGTH_SHORT).show();
+            }
+        };
+
+        TedPermission.with(activity)
+                .setPermissionListener(listenPermission)
+                .setDeniedMessage(denyMessage)
+                .setPermissions(permissions)
+                .check();
+    }
+
+    public static boolean arePermissionsGranted(Activity activity, String ... permissions) {
+        return TedPermission.isGranted(activity, permissions);
     }
 
 }

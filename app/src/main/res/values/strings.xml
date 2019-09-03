@@ -31,4 +31,9 @@
     <string name="progress_message">Please wait...</string>
     <string name="cancel">cancel</string>
     <string name="all_users">All Users</string>
+    <string name="reset">reset</string>
+    <string name="fingerprint_choice">Would you like to use the fingerprint scanner to log in next time?</string>
+    <string name="fingerprint_title">Fingerprint Authentication</string>
+    <string name="no">No</string>
+    <string name="yes">Yes</string>
 </resources>

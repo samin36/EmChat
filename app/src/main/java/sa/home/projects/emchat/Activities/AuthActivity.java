@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.widget.Button;
 
 import sa.home.projects.emchat.R;
+import sa.home.projects.emchat.Utils.UiUtils;
 
 public class AuthActivity extends AppCompatActivity {
 
@@ -23,6 +24,8 @@ public class AuthActivity extends AppCompatActivity {
 
         registerButton.setOnClickListener(view -> sendToRegisterActivity());
         loginButton.setOnClickListener(view -> sendToLoginActivity());
+        UiUtils.addButtonEffect(registerButton);
+        UiUtils.addButtonEffect(loginButton);
     }
 
     private void sendToLoginActivity() {

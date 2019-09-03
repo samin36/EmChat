@@ -65,5 +65,12 @@
 
     </style>
 
+    <style name="fingerprint_dialog_style" parent="android:Theme.Material.Dialog.Alert" >
+
+        <item name="DialogTitleAppearance">@android:style/TextAppearance.Material</item>
+        <item name="android:background">@drawable/rounded_rect_button</item>
+
+    </style>
+
 
 </resources>
