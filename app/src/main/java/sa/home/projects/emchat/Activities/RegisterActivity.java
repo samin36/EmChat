@@ -140,6 +140,8 @@ public class RegisterActivity extends AppCompatActivity {
                 Toasty.success(this, getResources().getString(R.string.successful_registration),
                                Toast.LENGTH_LONG).show();
                 saveFingerprintDialog.show();
+
+                //No longer needed here. This is taken care of in the createSaveFingerPrintDialog
 //                addImagesToStorage(username);
 //                progressDialog.dismiss();
 //                sendToMainActivity();

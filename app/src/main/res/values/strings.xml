@@ -36,4 +36,11 @@
     <string name="fingerprint_title">Fingerprint Authentication</string>
     <string name="no">No</string>
     <string name="yes">Yes</string>
+    <string name="default_description">Default Description</string>
+    <string name="profile_stats">500 Friends | 400 Mutual</string>
+    <string name="send_friend_request">Send Friend Request</string>
+    <string name="decline_friend_request">Decline Friend Request</string>
+    <string name="cancel_friend_request">Cancel Friend Request</string>
+    <string name="accept_friend_request">Accept Friend Request</string>
+    <string name="are_friends">Already Friends</string>
 </resources>

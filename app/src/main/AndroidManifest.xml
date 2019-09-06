@@ -21,8 +21,10 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".Activities.AllUsers"
-            android:parentActivityName=".Activities.MainActivity"></activity>
+        <activity android:name=".Activities.ProfileActivity"></activity>
+        <activity
+            android:name=".Activities.AllUsers"
+            android:parentActivityName=".Activities.MainActivity" />
         <activity
             android:name=".Activities.AccountSettings"
             android:parentActivityName=".Activities.MainActivity" />
@@ -36,8 +38,10 @@
         <activity
             android:name="com.theartofdev.edmodo.cropper.CropImageActivity"
             android:theme="@style/Base.Theme.AppCompat" />
-        <activity android:name=".Activities.MainActivity"
-            android:configChanges="keyboardHidden|orientation">
+        <activity
+            android:name=".Activities.MainActivity"
+            android:configChanges="keyboardHidden|orientation"
+            android:launchMode="singleTask">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

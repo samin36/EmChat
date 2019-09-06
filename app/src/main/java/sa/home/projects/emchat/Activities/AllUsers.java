@@ -1,6 +1,7 @@
 package sa.home.projects.emchat.Activities;
 
 import android.app.AlertDialog;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -24,6 +25,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 import es.dmoral.toasty.Toasty;
 import sa.home.projects.emchat.Model.User;
 import sa.home.projects.emchat.R;
+import sa.home.projects.emchat.Utils.Consts;
 import sa.home.projects.emchat.Utils.UiUtils;
 
 public class AllUsers extends AppCompatActivity {
@@ -82,6 +84,15 @@ public class AllUsers extends AppCompatActivity {
                 Picasso.get().load(Uri.parse(model.getThumbImage()))
                         .placeholder(R.drawable.default_profile_pic).into(holder.avatar);
 
+                String currentUid = getRef(position).getKey();
+
+                holder.entireView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        sendToProfileActivity(currentUid);
+                    }
+                });
+
             }
 
             @NonNull
@@ -93,6 +104,12 @@ public class AllUsers extends AppCompatActivity {
                 return new UsersViewHolder(view);
             }
         };
+    }
+
+    private void sendToProfileActivity(String currentUid) {
+        Intent intent = new Intent(AllUsers.this, ProfileActivity.class);
+        intent.putExtra(Consts.CURRENT_UID, currentUid);
+        startActivity(intent);
     }
 
     @Override
@@ -114,9 +131,12 @@ public class AllUsers extends AppCompatActivity {
         private TextView userName;
         private TextView userStatus;
 
+        private View entireView;
+
 
         UsersViewHolder(@NonNull View itemView) {
             super(itemView);
+            entireView = itemView;
 
             avatar = itemView.findViewById(R.id.all_users_image);
 
