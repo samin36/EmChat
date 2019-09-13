@@ -20,4 +20,9 @@ public class Consts {
 
     public static final String DATE_FORMAT = "dd-MMM-yyyy";
 
+    public static final String DB_NOTIFICATIONS = "Notifications";
+
+    public static final String REQUEST_TYPE = "Request";
+
+
 }

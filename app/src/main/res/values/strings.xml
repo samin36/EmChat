@@ -43,4 +43,5 @@
     <string name="cancel_friend_request">Cancel Friend Request</string>
     <string name="accept_friend_request">Accept Friend Request</string>
     <string name="are_friends">Already Friends</string>
+    <string name="unfriend_friend">Unfriend</string>
 </resources>

@@ -20,6 +20,7 @@ import com.squareup.picasso.Picasso;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 
 import es.dmoral.toasty.Toasty;
 import sa.home.projects.emchat.R;
@@ -36,6 +37,8 @@ public class ProfileActivity extends AppCompatActivity {
     private Button unfriendButton;
 
     private DatabaseReference databaseRef;
+
+    private DatabaseReference notificationRef;
     private FirebaseAuth auth;
 
     private String currentUid;
@@ -48,6 +51,8 @@ public class ProfileActivity extends AppCompatActivity {
         setContentView(R.layout.activity_profile);
 
         auth = FirebaseAuth.getInstance();
+
+        notificationRef = getDatabaseReference(Consts.DB_NOTIFICATIONS);
 
         profileImage = findViewById(R.id.profile_image);
         username = findViewById(R.id.profile_username);
@@ -77,8 +82,6 @@ public class ProfileActivity extends AppCompatActivity {
                     username.setText(dataSnapshot.child("name").getValue().toString());
                     description.setText(dataSnapshot.child("status").getValue().toString());
                     updateFriendStatus();
-//                    Toasty.info(ProfileActivity.this, "Currently: " + friendStatus,
-//                                Toasty.LENGTH_LONG).show();
                 }
 
                 @Override
@@ -98,21 +101,39 @@ public class ProfileActivity extends AppCompatActivity {
                     databaseRef.child(loggedInUserUid).child(currentUid)
                             .child(Consts.REQUEST_STATUS).setValue(Consts.REQUEST_SENT)
                             .addOnCompleteListener(task -> {
-                                if (!task.isSuccessful()) {
-                                    Toasty.error(ProfileActivity.this,
-                                                 task.getException().getMessage(),
-                                                 Toasty.LENGTH_LONG).show();
-                                }
-                            });
+                                if (task.isSuccessful()) {
+                                    databaseRef.child(currentUid).child(loggedInUserUid)
+                                            .child(Consts.REQUEST_STATUS)
+                                            .setValue(Consts.REQUEST_RECEIVED)
+                                            .addOnCompleteListener(task1 -> {
+                                                if (task1.isSuccessful()) {
 
-                    databaseRef = getDatabaseReference(Consts.DB_FRIEND_REQUESTS);
-                    databaseRef.child(currentUid).child(loggedInUserUid)
-                            .child(Consts.REQUEST_STATUS).setValue(Consts.REQUEST_RECEIVED)
-                            .addOnCompleteListener(task -> {
-                                if (!task.isSuccessful()) {
-                                    Toasty.error(ProfileActivity.this,
-                                                 task.getException().getMessage(),
-                                                 Toasty.LENGTH_LONG).show();
+                                                    HashMap<String, String> notificationData =
+                                                            new HashMap<>();
+                                                    notificationData.put("from", loggedInUserUid);
+                                                    notificationData
+                                                            .put("type", Consts.REQUEST_TYPE);
+
+                                                    notificationRef.child(currentUid).push()
+                                                            .setValue(notificationData)
+                                                            .addOnCompleteListener(task2 -> {
+                                                                if (!task.isSuccessful()) {
+                                                                    Toasty.error(
+                                                                            getApplicationContext(),
+                                                                            "Error occured with "
+                                                                            + "adding "
+                                                                            + "notification data: "
+                                                                            + task.getException()
+                                                                                    .getMessage(),
+                                                                            Toasty.LENGTH_LONG)
+                                                                            .show();
+                                                                }
+                                                            });
+
+
+                                                    updateFriendRequestButton();
+                                                }
+                                            });
                                 }
                             });
                     updateFriendRequestButton();
@@ -137,9 +158,34 @@ public class ProfileActivity extends AppCompatActivity {
         unfriendButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                String loggedInUid = auth.getUid();
+                if (friendStatus.equals(Consts.FRIENDS)) {
+                    removeFriendData(loggedInUid);
+                    friendStatus = Consts.NOT_FRIENDS;
+                } else if (friendStatus.equals(Consts.REQUEST_RECEIVED)) {
+                    removeFriendRequests(loggedInUid);
+                    friendStatus = Consts.NOT_FRIENDS;
+                }
+                updateFriendRequestButton();
             }
         });
+    }
+
+    private void removeFriendData(String loggedInUid) {
+        databaseRef = getDatabaseReference(Consts.DB_FRIEND_DATA);
+        databaseRef.child(loggedInUid).child(currentUid).removeValue()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        databaseRef.child(currentUid).child(loggedInUid).removeValue()
+                                .addOnCompleteListener(task1 -> {
+                                    if (!task1.isSuccessful()) {
+                                        Toasty.error(ProfileActivity.this,
+                                                     "Error unfriending friend", Toasty.LENGTH_LONG)
+                                                .show();
+                                    }
+                                });
+                    }
+                });
     }
 
     private void updateFriendData(String loggedInUserUid) {
@@ -183,6 +229,7 @@ public class ProfileActivity extends AppCompatActivity {
 
     private DatabaseReference getDatabaseReference(String friend_requests) {
         databaseRef = FirebaseDatabase.getInstance().getReference().child(friend_requests);
+        databaseRef.keepSynced(true);
         return databaseRef;
     }
 
@@ -193,11 +240,10 @@ public class ProfileActivity extends AppCompatActivity {
             databaseRef.addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                    String path = String.format("%s/%s/%s", loggedInUId, currentUid, Consts.REQUEST_STATUS);
+                    String path = String.format("%s/%s/%s", loggedInUId, currentUid,
+                                                Consts.REQUEST_STATUS);
                     if (dataSnapshot.hasChild(path)) {
                         String requestStatus = (String) dataSnapshot.child(path).getValue();
-                        Toasty.info(ProfileActivity.this, "Request status: " + requestStatus,
-                                    Toasty.LENGTH_LONG).show();
                         if (requestStatus.equals(Consts.REQUEST_SENT)) {
                             friendStatus = Consts.REQUEST_SENT;
                         } else if (requestStatus.equals(Consts.REQUEST_RECEIVED)) {
@@ -223,15 +269,16 @@ public class ProfileActivity extends AppCompatActivity {
         databaseRef = getDatabaseReference(Consts.DB_FRIEND_DATA);
         String loggedInUid = auth.getUid();
         if (databaseRef != null) {
-            databaseRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            databaseRef.addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                     String path = String.format("%s/%s", loggedInUid, currentUid);
                     if (dataSnapshot.hasChild(path)) {
                         friendStatus = Consts.FRIENDS;
-                        updateFriendRequestButton();
                     }
+                    updateFriendRequestButton();
                 }
+
                 @Override
                 public void onCancelled(@NonNull DatabaseError databaseError) {
                 }
@@ -243,17 +290,29 @@ public class ProfileActivity extends AppCompatActivity {
         switch (friendStatus) {
             case Consts.REQUEST_SENT:
                 friendStatusButton.setText(R.string.cancel_friend_request);
+                friendStatusButton.setEnabled(true);
+                unfriendButton.setEnabled(false);
+                unfriendButton.setVisibility(View.INVISIBLE);
                 break;
             case Consts.NOT_FRIENDS:
                 friendStatusButton.setText(R.string.send_friend_request);
+                friendStatusButton.setEnabled(true);
+                unfriendButton.setEnabled(false);
+                unfriendButton.setVisibility(View.INVISIBLE);
                 break;
             case Consts.REQUEST_RECEIVED:
                 friendStatusButton.setText(R.string.accept_friend_request);
+                friendStatusButton.setEnabled(true);
+                unfriendButton.setEnabled(true);
+                unfriendButton.setVisibility(View.VISIBLE);
+                unfriendButton.setText(R.string.decline_friend_request);
                 break;
             case Consts.FRIENDS:
                 friendStatusButton.setText(R.string.are_friends);
                 friendStatusButton.setEnabled(false);
-//                unfriendButton.setEnabled
+                unfriendButton.setEnabled(true);
+                unfriendButton.setVisibility(View.VISIBLE);
+                unfriendButton.setText(R.string.unfriend_friend);
                 break;
         }
     }

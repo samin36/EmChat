@@ -242,6 +242,7 @@ public class AccountSettings extends AppCompatActivity {
         String userPath = String.format("Users/%s", currentUid);
         DatabaseReference databaseRef =
                 FirebaseDatabase.getInstance().getReference().child(userPath);
+        databaseRef.keepSynced(true);
 
         Map<String, Object> imageLinkUpdate = new HashMap<>();
         imageLinkUpdate.put("image", avatarImageUri.toString());
@@ -268,6 +269,7 @@ public class AccountSettings extends AppCompatActivity {
         String userPath = String.format("Users/%s", currentUid);
         DatabaseReference databaseRef =
                 FirebaseDatabase.getInstance().getReference().child(userPath);
+        databaseRef.keepSynced(true);
 
         Map<String, Object> statusUpdate = new HashMap<>();
         statusUpdate.put("status", newStatus);

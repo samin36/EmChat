@@ -46,6 +46,7 @@ public class AllUsers extends AppCompatActivity {
         setContentView(R.layout.activity_all_users);
 
         databaseRef = FirebaseDatabase.getInstance().getReference("Users/");
+        databaseRef.keepSynced(true);
 
 
         progressDialog = UiUtils.createProgressDialog(this);
