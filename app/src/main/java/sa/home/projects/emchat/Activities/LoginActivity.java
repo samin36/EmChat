@@ -2,6 +2,7 @@ package sa.home.projects.emchat.Activities;
 
 import android.app.AlertDialog;
 import android.content.Intent;
+import android.support.annotation.NonNull;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -13,11 +14,18 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.iid.InstanceIdResult;
 
 import es.dmoral.toasty.Toasty;
 import me.aflak.libraries.dialog.FingerprintDialog;
 import sa.home.projects.emchat.R;
+import sa.home.projects.emchat.Utils.Consts;
 import sa.home.projects.emchat.Utils.InputChecker;
 import sa.home.projects.emchat.Utils.UiUtils;
 
@@ -36,6 +44,7 @@ public class LoginActivity extends AppCompatActivity{
     private Toolbar toolbar;
 
     private FirebaseAuth auth;
+    private DatabaseReference databaseRef;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,6 +68,7 @@ public class LoginActivity extends AppCompatActivity{
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         auth = FirebaseAuth.getInstance();
+        databaseRef = FirebaseDatabase.getInstance().getReference();
 
         loginButton.setOnClickListener(view -> {
             UiUtils.closeKeyboard(this);
@@ -87,7 +97,26 @@ public class LoginActivity extends AppCompatActivity{
             if (task.isSuccessful()) {
                 Toasty.success(this, getResources().getString(R.string.successful_login),
                                Toast.LENGTH_LONG).show();
-                sendToMainActivity();
+
+                String currentUid = auth.getCurrentUser().getUid();
+                String path = String.format("Users/%s/%s", currentUid, Consts.DB_USERS_TOKEN_ID);
+
+                FirebaseInstanceId.getInstance().getInstanceId().addOnCompleteListener(new OnCompleteListener<InstanceIdResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<InstanceIdResult> task) {
+                        if (task.isSuccessful()) {
+                            String deviceToken = task.getResult().getToken();
+                            databaseRef.child(path).setValue(deviceToken).addOnCompleteListener(task1 -> {
+                                sendToMainActivity();
+                            });
+                        } else {
+                            Toasty.success(LoginActivity.this, task.getException().getMessage(),
+                                           Toast.LENGTH_LONG).show();
+
+                            sendToMainActivity();
+                        }
+                    }
+                });
             } else {
                 Toasty.error(this, task.getException().getMessage(), Toast.LENGTH_LONG).show();
             }

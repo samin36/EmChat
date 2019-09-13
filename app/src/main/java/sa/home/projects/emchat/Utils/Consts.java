@@ -24,5 +24,7 @@ public class Consts {
 
     public static final String REQUEST_TYPE = "Request";
 
+    public static final String DB_USERS_TOKEN_ID = "tokenId";
+
 
 }

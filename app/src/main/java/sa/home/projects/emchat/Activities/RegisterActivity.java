@@ -23,6 +23,8 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.iid.InstanceIdResult;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -246,20 +248,31 @@ public class RegisterActivity extends AppCompatActivity {
         DatabaseReference databaseReference =
                 FirebaseDatabase.getInstance().getReference().child("Users").child(currentUid);
 
-        User userToAdd = new User(username, avatarImageLink, thumbImageLink,
-                                  getResources().getString(R.string.default_status),
-                                  saveFingerPrint);
+        FirebaseInstanceId.getInstance().getInstanceId().addOnCompleteListener(new OnCompleteListener<InstanceIdResult>() {
+            @Override
+            public void onComplete(@NonNull Task<InstanceIdResult> task) {
+                String tokenId = "";
+                if (task.isSuccessful()) {
+                    tokenId = task.getResult().getToken();
+                }
 
-        databaseReference.setValue(userToAdd).addOnCompleteListener(task -> {
-            if (task.isSuccessful()) {
-                Toasty.success(this, "User added to database successfully", Toast.LENGTH_LONG)
-                        .show();
-            } else {
-                Toasty.error(this,
-                             "Error adding user to database: " + task.getException().getMessage(),
-                             Toasty.LENGTH_LONG).show();
+                User userToAdd = new User(username, avatarImageLink, thumbImageLink,
+                                     getResources().getString(R.string.default_status),
+                                     saveFingerPrint, tokenId);
+
+                databaseReference.setValue(userToAdd).addOnCompleteListener(taskSave -> {
+                    if (taskSave.isSuccessful()) {
+                        Toasty.success(RegisterActivity.this, "User added to database successfully", Toast.LENGTH_LONG)
+                                .show();
+                    } else {
+                        Toasty.error(RegisterActivity.this,
+                                     "Error adding user to database: " + taskSave.getException().getMessage(),
+                                     Toasty.LENGTH_LONG).show();
+                    }
+                });
             }
         });
+
     }
 
 

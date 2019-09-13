@@ -7,17 +7,27 @@ public class User {
     private String thumbImage;
     private String status;
     private Boolean saveFingerprint;
+    private String tokenId;
 
     public User() {
     }
 
     public User(String name, String image, String thumbImage, String status,
-                Boolean saveFingerprint) {
+                Boolean saveFingerprint, String tokenId) {
         this.name = name;
         this.image = image;
         this.thumbImage = thumbImage;
         this.status = status;
         this.saveFingerprint = saveFingerprint;
+        this.tokenId = tokenId;
+    }
+
+    public String getTokenId() {
+        return tokenId;
+    }
+
+    public void setTokenId(String tokenId) {
+        this.tokenId = tokenId;
     }
 
     public Boolean isSaveFingerprint() {
