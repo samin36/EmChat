@@ -11,6 +11,8 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.gun0912.tedpermission.PermissionListener;
 import com.gun0912.tedpermission.TedPermission;
 import com.theartofdev.edmodo.cropper.CropImage;
@@ -107,6 +109,11 @@ public class UiUtils {
 
     public static boolean arePermissionsGranted(Activity activity, String ... permissions) {
         return TedPermission.isGranted(activity, permissions);
+    }
+
+    public static void clearNotificationDatabase(Context context) {
+        DatabaseReference notificationDatabase = FirebaseDatabase.getInstance().getReference();
+
     }
 
 }

@@ -68,7 +68,7 @@ public class ProfileActivity extends AppCompatActivity {
         UiUtils.addButtonEffect(friendStatusButton);
 
         currentUid = getIntent().getStringExtra(Consts.CURRENT_UID);
-        if (!currentUid.isEmpty()) {
+        if (currentUid != null && !currentUid.isEmpty()) {
             String path = String.format("Users/%s", currentUid);
             databaseRef = getDatabaseReference(path);
 
@@ -227,8 +227,8 @@ public class ProfileActivity extends AppCompatActivity {
                 });
     }
 
-    private DatabaseReference getDatabaseReference(String friend_requests) {
-        databaseRef = FirebaseDatabase.getInstance().getReference().child(friend_requests);
+    private DatabaseReference getDatabaseReference(String path) {
+        databaseRef = FirebaseDatabase.getInstance().getReference().child(path);
         databaseRef.keepSynced(true);
         return databaseRef;
     }
