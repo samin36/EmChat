@@ -53,6 +53,7 @@ public class ProfileActivity extends AppCompatActivity {
         auth = FirebaseAuth.getInstance();
 
         notificationRef = getDatabaseReference(Consts.DB_NOTIFICATIONS);
+        UiUtils.clearNotificationDatabase(notificationRef);
 
         profileImage = findViewById(R.id.profile_image);
         username = findViewById(R.id.profile_username);

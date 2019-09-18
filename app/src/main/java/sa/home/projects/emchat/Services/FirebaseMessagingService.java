@@ -16,6 +16,7 @@ import java.util.Map;
 import sa.home.projects.emchat.Activities.ProfileActivity;
 import sa.home.projects.emchat.R;
 import sa.home.projects.emchat.Utils.Consts;
+import sa.home.projects.emchat.Utils.UiUtils;
 
 import static sa.home.projects.emchat.EmChat.CHANNEL_ID;
 
@@ -33,7 +34,9 @@ public class FirebaseMessagingService
         String clickAction = remoteMessage.getNotification().getClickAction();
 
         Map<String, String> extraData = remoteMessage.getData();
-        String whoseActivityToOpen = extraData.get("whose_profile_to_open");
+        String whoseActivityToOpen = extraData.get(Consts.CURRENT_UID);
+
+        Log.d("msgservice", extraData.keySet().toString());
 
         Intent clickIntent = new Intent(clickAction);
 
@@ -49,8 +52,6 @@ public class FirebaseMessagingService
                 .setPriority(NotificationCompat.PRIORITY_HIGH)
                 .setCategory(NotificationCompat.CATEGORY_SOCIAL)
                 .setContentIntent(clickPendingIntent).build();
-
-
         manager.notify(1, notification);
     }
 }
