@@ -10,6 +10,7 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,10 +18,21 @@ import android.widget.TextView;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
+import com.firebase.ui.database.SnapshotParser;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import es.dmoral.toasty.Toasty;
@@ -57,18 +69,13 @@ public class FriendsFragment extends Fragment {
 
         View view = inflater.inflate(R.layout.fragment_friends, container, false);
 
-        friendsDatabase = FirebaseDatabase.getInstance().getReference(Consts.DB_FRIEND_DATA);
+        auth = FirebaseAuth.getInstance();
+        String loggedInUid = auth.getUid();
+        friendsDatabase = FirebaseDatabase.getInstance().getReference(Consts.DB_FRIEND_DATA)
+                .child(loggedInUid);
         friendsDatabase.keepSynced(true);
         usersDatabase = FirebaseDatabase.getInstance().getReference("Users/");
         usersDatabase.keepSynced(true);
-
-//        Toasty.info(getActivity(), usersDatabase.orderByChild("name").getRef().getKey(), Toasty.LENGTH_LONG).show();
-
-        auth = FirebaseAuth.getInstance();
-        String currentUid = auth.getUid();
-
-//        friendsDatabase.child(currentUid);
-//        friendsDatabase.
 
         recyclerView = view.findViewById(R.id.fragment_friends_recycler_view);
         recyclerView.setHasFixedSize(true);
@@ -82,11 +89,21 @@ public class FriendsFragment extends Fragment {
         return view;
     }
 
-    private void getAllFriends() {
-        FirebaseRecyclerOptions<User> options = new FirebaseRecyclerOptions.Builder<User>()
-                .setQuery(usersDatabase.orderByChild("name"), User.class).build();
+    private void setupFriendsRecycler(Map<String, User> allUsers) {
 
-//        Toasty.info(getActivity(), "" + options.getSnapshots().size(), Toasty.LENGTH_LONG).show();
+        FirebaseRecyclerOptions<User> options = new FirebaseRecyclerOptions.Builder<User>()
+                .setQuery(friendsDatabase, new SnapshotParser<User>() {
+                    @Override
+                    public User parseSnapshot(@NonNull DataSnapshot snapshot) {
+                        String uid = snapshot.getKey();
+                        if (allUsers.containsKey(uid)) {
+                            Log.d("FRIENDS", "Friend found: " + uid);
+                            return allUsers.get(uid);
+                        }
+//                        Log.d("FRIENDS", "UID: " + snapshot.getValue(User.class).);
+                        return new User("DELETE", "", "", "", false, "");
+                    }
+                }).build();
 
         firebaseRecyclerAdapter = new FirebaseRecyclerAdapter<User, UsersViewHolder>(options) {
             @Override
@@ -94,7 +111,8 @@ public class FriendsFragment extends Fragment {
                                             @NonNull User model) {
                 holder.userName.setText(model.getName());
                 holder.userStatus.setText(model.getStatus());
-                Picasso.get().load(Uri.parse(model.getThumbImage())).placeholder(R.drawable.default_profile_pic).into(holder.avatar);
+                Picasso.get().load(Uri.parse(model.getThumbImage()))
+                        .placeholder(R.drawable.default_profile_pic).into(holder.avatar);
 
                 String currentUid = getRef(position).getKey();
 
@@ -116,19 +134,51 @@ public class FriendsFragment extends Fragment {
         };
     }
 
+
     private void sendToProfileActivity(String currentUid) {
         Intent intent = new Intent(getActivity(), ProfileActivity.class);
         intent.putExtra(Consts.CURRENT_UID, currentUid);
         startActivity(intent);
     }
 
+    private void fetchAllFriends(FriendDataCallback dataCallback) {
+        usersDatabase.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                Map<String, User> allUsers = new HashMap<>();
+                for (DataSnapshot snap : dataSnapshot.getChildren()) {
+                    allUsers.put(snap.getKey(), snap.getValue(User.class));
+                }
+
+                dataCallback.onCallback(allUsers);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+    }
+
+    private interface FriendDataCallback {
+        void onCallback(Map<String, User> allUsers);
+    }
+
+
     @Override
     public void onStart() {
         super.onStart();
 
-        getAllFriends();
-        recyclerView.setAdapter(firebaseRecyclerAdapter);
-        firebaseRecyclerAdapter.startListening();
+
+        fetchAllFriends(new FriendDataCallback() {
+            @Override
+            public void onCallback(Map<String, User> allUsers) {
+                setupFriendsRecycler(allUsers);
+                recyclerView.setAdapter(firebaseRecyclerAdapter);
+                firebaseRecyclerAdapter.startListening();
+            }
+        });
     }
 
     @Override
